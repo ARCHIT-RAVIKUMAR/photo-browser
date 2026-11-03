@@ -2,16 +2,16 @@ import { useRef } from 'react';
 
 // Two entry points:
 //  - folder: <input webkitdirectory> picks a whole folder (nested files included).
-//    Browsers' folder dialogs hide or grey out files; you open the folder and confirm.
 //  - files: a normal file dialog that shows images and allows multi-select.
 export default function FolderPicker({ onFiles, compact = false }) {
   const folderRef = useRef(null);
   const filesRef = useRef(null);
 
   const handle = (e) => {
-    const files = e.target.files;
-    if (files && files.length) onFiles(files);
+    // Copy first: resetting the input below empties the live FileList.
+    const files = Array.from(e.target.files || []);
     e.target.value = ''; // allow re-selecting the same selection
+    onFiles(files);
   };
 
   const cls = compact ? 'btn' : 'btn btn-primary';
